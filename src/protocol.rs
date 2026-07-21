@@ -237,6 +237,10 @@ pub struct PlayerInput {
     pub sequence: u32,
     /// Client-local timestamp (seconds) when the input was sampled.
     pub timestamp: f64,
+    /// The game session this input belongs to (set once, used for address registration).
+    pub session_id: uuid::Uuid,
+    /// The sending player's id (set once, used for address registration).
+    pub player_id: uuid::Uuid,
     /// Normalised wish-direction vector `[x, y, z]`.
     pub movement: [f32; 3],
     /// Camera yaw in radians.
@@ -499,6 +503,8 @@ mod tests {
         let input = PlayerInput {
             sequence: 42,
             timestamp: 1.234,
+            session_id: Uuid::default(),
+            player_id: Uuid::default(),
             movement: [0.0, 0.0, 1.0],
             look_yaw: 1.57,
             look_pitch: -0.3,

@@ -271,6 +271,8 @@ pub struct GameStateSnapshot {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct NetworkPlayerState {
     pub id: Uuid,
+    /// Player display name.
+    pub username: String,
     /// World position `[x, y, z]`.
     pub position: [f32; 3],
     /// Velocity vector `[x, y, z]`.

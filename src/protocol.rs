@@ -176,6 +176,12 @@ pub enum ServerMessage {
     Error {
         message: String,
     },
+
+    // -- Chat --
+    ChatBroadcast {
+        from_username: String,
+        content: String,
+    },
 }
 
 // ---------------------------------------------------------------------------

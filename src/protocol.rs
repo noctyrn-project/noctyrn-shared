@@ -100,6 +100,15 @@ pub enum ClientMessage {
     // -- Gameplay --
     /// Player is ready to respawn (sent after the 5-second post-death delay).
     RequestRespawn,
+
+    /// Sent when entering a match to tell the server which weapons the player
+    /// has equipped. The server broadcasts the primary weapon_id in snapshots.
+    SetLoadout {
+        primary: String,
+        secondary: String,
+        melee: String,
+        equipment: String,
+    },
 }
 
 /// Messages sent from server to client over TCP.

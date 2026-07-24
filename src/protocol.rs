@@ -96,6 +96,10 @@ pub enum ClientMessage {
     ChatMessage {
         content: String,
     },
+
+    // -- Gameplay --
+    /// Player is ready to respawn (sent after the 5-second post-death delay).
+    RequestRespawn,
 }
 
 /// Messages sent from server to client over TCP.
@@ -236,6 +240,41 @@ impl PlayerActions {
     }
 }
 
+/// Dedicated shot-fired packet sent over UDP when the player fires.
+///
+/// Sent separately from `PlayerInput` so the aim origin/direction are captured
+/// at the exact moment of firing, not when the next movement tick happens.
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct ShotFired {
+    /// Discriminator so the server can route this packet. Always `"ShotFired"`.
+    #[serde(rename = "type")]
+    pub packet_type: String,
+    pub player_id: uuid::Uuid,
+    pub session_id: uuid::Uuid,
+    /// World-space origin of the shot (camera position).
+    pub origin: [f32; 3],
+    /// Normalised world-space aim direction.
+    pub direction: [f32; 3],
+    /// Weapon identifier (e.g. "colt_m4a1").
+    pub weapon_id: String,
+    /// Client timestamp when the shot was fired (for lag compensation).
+    pub timestamp: f64,
+}
+
+impl ShotFired {
+    pub fn new(player_id: uuid::Uuid, session_id: uuid::Uuid, origin: [f32; 3], direction: [f32; 3], weapon_id: String, timestamp: f64) -> Self {
+        Self {
+            packet_type: "ShotFired".to_string(),
+            player_id,
+            session_id,
+            origin,
+            direction,
+            weapon_id,
+            timestamp,
+        }
+    }
+}
+
 /// Client-to-server input packet sent every client tick over UDP.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct PlayerInput {
@@ -369,7 +408,17 @@ pub fn decode_player_input(data: &[u8]) -> Result<PlayerInput, serde_json::Error
     serde_json::from_slice(data)
 }
 
-/// Serialise a `GameStateSnapshot` to JSON bytes (UDP payload).
+/// Serialise a `ShotFired` into raw JSON bytes (UDP framing).
+pub fn encode_shot_fired(shot: &ShotFired) -> Result<Vec<u8>, serde_json::Error> {
+    serde_json::to_vec(shot)
+}
+
+/// Deserialise a `ShotFired` from raw JSON bytes.
+pub fn decode_shot_fired(data: &[u8]) -> Result<ShotFired, serde_json::Error> {
+    serde_json::from_slice(data)
+}
+
+/// Serialise a `GameStateSnapshot` into raw JSON bytes (UDP framing).
 pub fn encode_game_state(snapshot: &GameStateSnapshot) -> Result<Vec<u8>, serde_json::Error> {
     serde_json::to_vec(snapshot)
 }

@@ -268,10 +268,14 @@ pub struct ShotFired {
     pub weapon_id: String,
     /// Client timestamp when the shot was fired (for lag compensation).
     pub timestamp: f64,
+    /// Random seed for deterministic pellet spread (shotguns).
+    pub seed: u64,
+    /// Number of pellets for this shot (1 for non-shotguns).
+    pub pellet_count: u8,
 }
 
 impl ShotFired {
-    pub fn new(player_id: uuid::Uuid, session_id: uuid::Uuid, origin: [f32; 3], direction: [f32; 3], weapon_id: String, timestamp: f64) -> Self {
+    pub fn new(player_id: uuid::Uuid, session_id: uuid::Uuid, origin: [f32; 3], direction: [f32; 3], weapon_id: String, timestamp: f64, seed: u64, pellet_count: u8) -> Self {
         Self {
             packet_type: "ShotFired".to_string(),
             player_id,
@@ -280,6 +284,8 @@ impl ShotFired {
             direction,
             weapon_id,
             timestamp,
+            seed,
+            pellet_count,
         }
     }
 }
@@ -366,6 +372,8 @@ pub enum GameEvent {
         origin: [f32; 3],
         direction: [f32; 3],
         weapon: String,
+        seed: u64,
+        pellet_count: u8,
     },
     MatchStateUpdate {
         time_remaining: f32,

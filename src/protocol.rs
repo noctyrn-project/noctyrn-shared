@@ -183,6 +183,7 @@ pub enum ServerMessage {
         lobby_id: Uuid,
         server_addr: String,
         udp_port: u16,
+        map_id: String,
     },
 
     // -- General --

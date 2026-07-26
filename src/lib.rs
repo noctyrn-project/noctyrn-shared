@@ -4,6 +4,7 @@ pub mod lobby;
 pub mod gamemode;
 pub mod weapon;
 pub mod movement;
+pub mod map;
 
 // Re-export commonly used types at crate root for convenience.
 pub use gamemode::GameMode;

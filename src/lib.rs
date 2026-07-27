@@ -5,6 +5,7 @@ pub mod gamemode;
 pub mod weapon;
 pub mod movement;
 pub mod map;
+pub mod spread;
 
 // Re-export commonly used types at crate root for convenience.
 pub use gamemode::GameMode;

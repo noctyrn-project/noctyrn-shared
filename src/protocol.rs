@@ -101,6 +101,13 @@ pub enum ClientMessage {
     /// Player is ready to respawn (sent after the 5-second post-death delay).
     RequestRespawn,
 
+    /// Sent when the player switches their active weapon.
+    /// The server updates the player's weapon_id in snapshots so other
+    /// clients see the correct model.
+    SwitchWeapon {
+        weapon_id: String,
+    },
+
     /// Sent when entering a match to tell the server which weapons the player
     /// has equipped. The server broadcasts the primary weapon_id in snapshots.
     SetLoadout {

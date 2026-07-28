@@ -101,6 +101,11 @@ pub enum ClientMessage {
     /// Player is ready to respawn (sent after the 5-second post-death delay).
     RequestRespawn,
 
+    /// Sent when the player leaves a match voluntarily (exit to main menu).
+    /// Server removes the player from the session so other clients stop
+    /// seeing them.
+    LeaveGame,
+
     /// Sent when the player switches their active weapon.
     /// The server updates the player's weapon_id in snapshots so other
     /// clients see the correct model.
@@ -382,6 +387,13 @@ pub enum GameEvent {
         weapon: String,
         seed: u64,
         pellet_count: u8,
+    },
+    GrenadeExploded {
+        owner_id: Uuid,
+        position: [f32; 3],
+        weapon: String,
+        damage: f32,
+        radius: f32,
     },
     MatchStateUpdate {
         time_remaining: f32,

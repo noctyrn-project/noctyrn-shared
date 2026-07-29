@@ -106,6 +106,11 @@ pub enum ClientMessage {
     /// seeing them.
     LeaveGame,
 
+    /// Request to join an existing session by ID (rejoin after disconnect).
+    JoinSession {
+        session_id: Uuid,
+    },
+
     /// Sent when the player switches their active weapon.
     /// The server updates the player's weapon_id in snapshots so other
     /// clients see the correct model.
@@ -397,6 +402,10 @@ pub enum GameEvent {
     },
     MatchStateUpdate {
         time_remaining: f32,
+        scores: Vec<(Uuid, i32)>,
+    },
+    MatchOver {
+        winner_id: Option<Uuid>,
         scores: Vec<(Uuid, i32)>,
     },
 }

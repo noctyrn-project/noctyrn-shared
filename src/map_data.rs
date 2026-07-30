@@ -1,39 +1,24 @@
 use serde::Deserialize;
 
-/// An oriented bounding-box collider, stored in the mesh's local
-/// coordinate space (pre-scale). Apply the map's `scale` factor at runtime.
-/// Each entry corresponds to a single triangle face, with `half_extents.z`
-/// set to a small fixed thickness along the face normal.
+/// A triangle mesh collider from one mesh node.
+/// parry3d builds a BVH-accelerated TriMesh from this at runtime.
 #[derive(Deserialize, Clone, Debug)]
-pub struct ColliderBox {
-    pub center: [f32; 3],
-    pub half_extents: [f32; 3],
-    /// Rotation quaternion (w, x, y, z) that orients the box from its
-    /// axis-aligned rest pose to the face's local frame.
-    #[serde(default = "default_identity")]
-    pub rotation: [f32; 4],
-    /// Material type for bullet penetration, footstep sounds, etc.
-    /// 0 = Concrete, 1 = Metal, 2 = Wood, 3 = Glass, 4 = Drywall
-    pub material: u8,
-}
-
-fn default_identity() -> [f32; 4] {
-    [0.0, 0.0, 0.0, 1.0]
+pub struct TriangleMesh {
+    pub vertices: Vec<[f32; 3]>,
+    pub indices: Vec<[u32; 3]>,
 }
 
 /// Per-map spawn point and objective data, shared by server and client.
 #[derive(Deserialize, Clone, Debug)]
 pub struct MapData {
-    /// World-space spawn positions (feet-level, Y = ground height).
     pub spawns: Vec<[f32; 3]>,
-    /// Uniform scale applied to the GLB and all colliders.
     pub scale: f32,
 }
 
-/// Collection of collider boxes for one map.
+/// Collection of triangle meshes for one map.
 #[derive(Deserialize, Clone, Debug)]
 pub struct ColliderCollection {
-    pub colliders: Vec<ColliderBox>,
+    pub colliders: Vec<TriangleMesh>,
 }
 
 /// Load collider data for a map by name (embedded at compile time).

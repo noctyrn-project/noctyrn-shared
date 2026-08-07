@@ -26,6 +26,7 @@ pub fn load_colliders(name: &str) -> ColliderCollection {
     let json = match name {
         "dust_storm" => include_str!("../assets/maps/dust_storm_colliders.json"),
         "city" => include_str!("../assets/maps/city_colliders.json"),
+        "testing_grounds" => include_str!("../assets/maps/testing_grounds_colliders.json"),
         _ => panic!("unknown map: {name}"),
     };
     serde_json::from_str(json).expect("failed to parse collider JSON")
@@ -36,6 +37,7 @@ pub fn load_map_data(name: &str) -> MapData {
     let json = match name {
         "dust_storm" => include_str!("../assets/maps/dust_storm_data.json"),
         "city" => include_str!("../assets/maps/city_data.json"),
+        "testing_grounds" => include_str!("../assets/maps/testing_grounds_data.json"),
         _ => panic!("unknown map: {name}"),
     };
     serde_json::from_str(json).expect("failed to parse map data JSON")

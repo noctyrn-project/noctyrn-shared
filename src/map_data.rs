@@ -6,6 +6,11 @@ use serde::Deserialize;
 pub struct TriangleMesh {
     pub vertices: Vec<[f32; 3]>,
     pub indices: Vec<[u32; 3]>,
+    /// The material name recorded by the bake tool (from the GLB). The game
+    /// maps it to a `MaterialType`; `None`/unknown names become the default
+    /// "world" material.
+    #[serde(default)]
+    pub material: Option<String>,
 }
 
 /// Per-map spawn point and objective data, shared by server and client.
